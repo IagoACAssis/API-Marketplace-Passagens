@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  COMPANY
+  ADMIN
+}
+
+enum TicketStatus {
+  RESERVED
+  PAID
+  CANCELLED
+  USED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  BOLETO
+}
+
+enum TransportType {
+  BUS
+  BOAT
+  FERRY
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  cpf          String?  @unique
+  phone        String?
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company?
+  tickets Ticket[]
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  cnpj        String   @unique
+  tradingName String
+  legalName   String
+  logo        String?
+  document    String?
+  approved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routes Route[]
+}
+
+model Route {
+  id             String        @id @default(uuid())
+  companyId      String
+  origin         String
+  destination    String
+  departureTime  DateTime
+  arrivalTime    DateTime
+  price          Decimal       @db.Decimal(10, 2)
+  type           TransportType
+  capacity       Int
+  availableSeats Int
+  active         Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  company Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  tickets Ticket[]
+}
+
+model Ticket {
+  id           String       @id @default(uuid())
+  routeId      String
+  userId       String
+  status       TicketStatus @default(RESERVED)
+  ticketCode   String       @unique
+  passenger    String
+  passengerCpf String
+  seatNumber   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  route   Route    @relation(fields: [routeId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+  payment Payment?
+}
+
+model Payment {
+  id         String        @id @default(uuid())
+  ticketId   String        @unique
+  status     PaymentStatus @default(PENDING)
+  method     PaymentMethod
+  amount     Decimal       @db.Decimal(10, 2)
+  externalId String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
