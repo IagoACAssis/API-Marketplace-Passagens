@@ -7,15 +7,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
     const company = await prisma.company.findUnique({
       where: { id }
     });
-    
-    return company;
-  }
 
-  async findByUserId(userId: string): Promise<Company | null> {
-    const company = await prisma.company.findUnique({
-      where: { userId }
-    });
-    
     return company;
   }
 
@@ -23,7 +15,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
     const company = await prisma.company.findUnique({
       where: { cnpj }
     });
-    
+
     return company;
   }
 
@@ -31,7 +23,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
     const company = await prisma.company.create({
       data: companyData
     });
-    
+
     return company;
   }
 
@@ -40,7 +32,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
       where: { id },
       data
     });
-    
+
     return company;
   }
 
@@ -52,24 +44,16 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
   async listAll(page: number, limit: number): Promise<{ companies: Company[], total: number }> {
     const skip = (page - 1) * limit;
-    
+
     const [companies, total] = await Promise.all([
       prisma.company.findMany({
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        include: {
-          user: {
-            select: {
-              name: true,
-              email: true
-            }
-          }
-        }
       }),
       prisma.company.count()
     ]);
-    
+
     return { companies, total };
   }
 }

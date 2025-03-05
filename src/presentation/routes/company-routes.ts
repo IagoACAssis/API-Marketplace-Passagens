@@ -4,7 +4,6 @@ import { DeleteCompanyUseCase } from "@/application/useCases/companies/DeleteCom
 import { ListCompaniesUseCase } from "@/application/useCases/companies/ListCompaniesUseCase";
 import { UpdateCompanyUseCase } from "@/application/useCases/companies/UpdateCompanyUseCase";
 import { PrismaCompanyRepository } from "@/infrastructure/database/prisma/repositories/PrismaCompanyRepository";
-import { PrismaUserRepository } from "@/infrastructure/database/prisma/repositories/PrismaUserRepository";
 import { FastifyInstance } from "fastify";
 import { CompanyController } from "../controllers/CompanyController";
 import { authenticate } from "../middlewares/authenticate";
@@ -15,13 +14,11 @@ export async function companyRoutes(app: FastifyInstance) {
 
   // Inicializa dependências
   const companyRepository = new PrismaCompanyRepository();
-  const userRepository = new PrismaUserRepository();
   const approveCompanyUseCase = new ApproveCompanyUseCase(companyRepository);
-  const createCompanyUseCase = new CreateCompanyUseCase(companyRepository, userRepository);
+  const createCompanyUseCase = new CreateCompanyUseCase(companyRepository);
   const deleteCompanyUseCase = new DeleteCompanyUseCase(companyRepository);
   const listCompaniesUseCase = new ListCompaniesUseCase(companyRepository);
   const updateCompanyUseCase = new UpdateCompanyUseCase(companyRepository);
-
 
   const companyController = new CompanyController(createCompanyUseCase, updateCompanyUseCase, deleteCompanyUseCase, listCompaniesUseCase, approveCompanyUseCase);
 

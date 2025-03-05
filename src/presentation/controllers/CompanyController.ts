@@ -31,12 +31,10 @@ export class CompanyController {
   ) {}
 
   async create(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const userId = request.user.sub;
+    try {      
       const { cnpj, tradingName, legalName, logo, document } = createCompanySchema.parse(request.body);
 
-      const company = await this.createCompanyUseCase.execute({
-        userId,
+      const company = await this.createCompanyUseCase.execute({       
         cnpj,
         tradingName,
         legalName,

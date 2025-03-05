@@ -27,7 +27,7 @@ async function main() {
         name: 'Administrador',
         email: 'admin@marketplace.com',
         passwordHash,
-        role: 'ADMIN'
+        role: UserRole.ADMIN
       }
     });
 

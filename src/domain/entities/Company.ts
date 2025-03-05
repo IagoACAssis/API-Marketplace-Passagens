@@ -1,6 +1,5 @@
 export interface Company {
-  id: string;
-  userId: string;
+  id: string;  
   cnpj: string;
   tradingName: string;
   legalName: string;
