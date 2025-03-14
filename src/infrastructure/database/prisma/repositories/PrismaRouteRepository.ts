@@ -8,7 +8,13 @@ export class PrismaRouteRepository implements RouteRepository {
       where: { id }
     });
     
-    return route;
+    if (!route) return null;
+
+    return {
+      ...route,
+      type: route.type as TransportType,
+      price: Number(route.price)    
+    };
   }
 
   async create(routeData: Omit<Route, 'id' | 'createdAt' | 'updatedAt'>): Promise<Route> {
@@ -21,6 +27,7 @@ export class PrismaRouteRepository implements RouteRepository {
     
     return {
       ...route,
+      type: route.type as TransportType,
       price: Number(route.price) // Convertendo Decimal para number
     };
   }
@@ -40,6 +47,7 @@ export class PrismaRouteRepository implements RouteRepository {
     
     return {
       ...route,
+      type: route.type as TransportType,
       price: Number(route.price)
     };
   }
@@ -68,6 +76,7 @@ export class PrismaRouteRepository implements RouteRepository {
     return {
       routes: routes.map(route => ({
         ...route,
+        type: route.type as TransportType,
         price: Number(route.price)
       })),
       total
@@ -141,6 +150,7 @@ export class PrismaRouteRepository implements RouteRepository {
     return {
       routes: routes.map(route => ({
         ...route,
+        type: route.type as TransportType,
         price: Number(route.price)
       })),
       total

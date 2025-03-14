@@ -6,9 +6,15 @@ export class PrismaCompanyRepository implements CompanyRepository {
   async findById(id: string): Promise<Company | null> {
     const company = await prisma.company.findUnique({
       where: { id }
-    });
+    }); 
 
-    return company;
+    if (!company) return null;
+
+    return {
+      ...company,
+      logo: company.logo || undefined,
+      document: company.document || undefined
+    };
   }
 
   async findByCNPJ(cnpj: string): Promise<Company | null> {
@@ -16,7 +22,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
       where: { cnpj }
     });
 
-    return company;
+    if (!company) return null;
+
+    return {
+      ...company,
+      logo: company.logo || undefined,
+      document: company.document || undefined
+    };
   }
 
   async create(companyData: Omit<Company, 'id' | 'createdAt' | 'updatedAt'>): Promise<Company> {
@@ -24,7 +36,11 @@ export class PrismaCompanyRepository implements CompanyRepository {
       data: companyData
     });
 
-    return company;
+    return {
+      ...company,
+      logo: company.logo || undefined,
+      document: company.document || undefined
+    };
   }
 
   async update(id: string, data: Partial<Company>): Promise<Company> {
@@ -33,7 +49,11 @@ export class PrismaCompanyRepository implements CompanyRepository {
       data
     });
 
-    return company;
+    return {
+      ...company,
+      logo: company.logo || undefined,
+      document: company.document || undefined
+    };
   }
 
   async delete(id: string): Promise<void> {
@@ -54,6 +74,10 @@ export class PrismaCompanyRepository implements CompanyRepository {
       prisma.company.count()
     ]);
 
-    return { companies, total };
+    return { companies: companies.map(company => ({
+      ...company,
+      logo: company.logo || undefined,
+      document: company.document || undefined
+    })), total };
   }
 }

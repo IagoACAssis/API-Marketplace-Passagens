@@ -8,24 +8,38 @@ export class PrismaUserRepository implements UserRepository {
     const user = await prisma.user.findUnique({
       where: { id }
     });
-    
-    return user;
+
+    if (!user) return null;
+
+    return {
+      ...user,
+      role: user.role as UserRole
+    };
   }
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: { email }
     });
-    
-    return user;
+
+    if (!user) return null;
+
+    return {
+      ...user,
+      role: user.role as UserRole
+    };
   }
 
   async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
     const user = await prisma.user.create({
       data: userData
     });
-    
-    return user;
+
+
+    return {
+      ...user,
+      role: user.role as UserRole
+    };
   }
 
   async update(id: string, data: Partial<User>): Promise<User> {
@@ -33,8 +47,13 @@ export class PrismaUserRepository implements UserRepository {
       where: { id },
       data
     });
-    
-    return user;
+
+
+
+    return {
+      ...user,
+      role: user.role as UserRole
+    };
   }
 
   async delete(id: string): Promise<void> {

@@ -6,12 +6,12 @@ export enum UserRole {
 
 export interface User {
   id: string;
-  companyId?: string;
+  companyId?: string | null;
   name: string;
   email: string;
   passwordHash: string;
-  cpf?: string;
-  phone?: string;
+  cpf?: string | null;
+  phone?: string | null;
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;

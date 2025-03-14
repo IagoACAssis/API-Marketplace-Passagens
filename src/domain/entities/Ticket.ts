@@ -13,7 +13,7 @@ export interface Ticket {
   ticketCode: string;
   passenger: string;
   passengerCpf: string;
-  seatNumber?: string;
+  seatNumber?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

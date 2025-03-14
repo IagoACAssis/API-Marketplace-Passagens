@@ -8,7 +8,12 @@ export class PrismaTicketRepository implements TicketRepository {
       where: { id }
     });
     
-    return ticket;
+    if (!ticket) return null;
+
+    return {
+      ...ticket,
+      status: ticket.status as TicketStatus
+    };
   }
 
   async findByCode(ticketCode: string): Promise<Ticket | null> {
@@ -16,7 +21,12 @@ export class PrismaTicketRepository implements TicketRepository {
       where: { ticketCode }
     });
     
-    return ticket;
+    if (!ticket) return null;
+
+    return {
+      ...ticket,
+      status: ticket.status as TicketStatus
+    };
   }
 
   async create(ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>): Promise<Ticket> {
@@ -24,7 +34,10 @@ export class PrismaTicketRepository implements TicketRepository {
       data: ticketData
     });
     
-    return ticket;
+    return {
+      ...ticket,
+      status: ticket.status as TicketStatus
+    };
   }
 
   async update(id: string, data: Partial<Ticket>): Promise<Ticket> {
@@ -33,7 +46,10 @@ export class PrismaTicketRepository implements TicketRepository {
       data
     });
     
-    return ticket;
+    return {
+      ...ticket,
+      status: ticket.status as TicketStatus
+    };
   }
 
   async updateStatus(id: string, status: TicketStatus): Promise<Ticket> {
@@ -42,7 +58,10 @@ export class PrismaTicketRepository implements TicketRepository {
       data: { status }
     });
     
-    return ticket;
+    return {
+      ...ticket,
+      status: ticket.status as TicketStatus
+    };
   }
 
   async findByUser(userId: string, page: number, limit: number): Promise<{ tickets: Ticket[], total: number }> {
@@ -63,7 +82,10 @@ export class PrismaTicketRepository implements TicketRepository {
       })
     ]);
     
-    return { tickets, total };
+    return { tickets: tickets.map(ticket => ({
+      ...ticket,
+      status: ticket.status as TicketStatus
+    })), total };
   }
 
   async findByRoute(routeId: string): Promise<Ticket[]> {
@@ -71,6 +93,9 @@ export class PrismaTicketRepository implements TicketRepository {
       where: { routeId }
     });
     
-    return tickets;
+    return tickets.map(ticket => ({
+      ...ticket,
+      status: ticket.status as TicketStatus
+    }));
   }
 }

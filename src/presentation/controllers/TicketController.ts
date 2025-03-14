@@ -21,7 +21,8 @@ export class TicketController {
   async reserve(request: FastifyRequest, reply: FastifyReply) {
     try {
       // Valida o token e obtém o usuário atual
-      const userId = request.user.sub;
+      const user = request.user as { sub: string };
+      const userId = user.sub;
       
       const { routeId, passenger, passengerCpf, seatNumber } = reserveTicketSchema.parse(
         request.body
