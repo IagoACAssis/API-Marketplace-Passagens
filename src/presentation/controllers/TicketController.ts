@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import { ReserveTicketUseCase } from '@application/useCases/tickets/ReserveTicketUseCase';
+import { ReserveTicketUseCase } from '../../application/useCases/tickets/ReserveTicketUseCase';
 
 const reserveTicketSchema = z.object({
   routeId: z.string().uuid(),
@@ -21,8 +21,8 @@ export class TicketController {
   async reserve(request: FastifyRequest, reply: FastifyReply) {
     try {
       // Valida o token e obtém o usuário atual
-      const user = request.user as { sub: string };
-      const userId = user.sub;
+      const user = request.user as { id: string };
+      const userId = user.id;
       
       const { routeId, passenger, passengerCpf, seatNumber } = reserveTicketSchema.parse(
         request.body

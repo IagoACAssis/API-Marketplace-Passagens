@@ -1,6 +1,6 @@
-import { TicketStatus } from '@domain/entities/Ticket';
-import { RouteRepository } from '@domain/repositories/RouteRepository';
-import { TicketRepository } from '@domain/repositories/TicketRepository';
+import { TicketStatus } from '../../../domain/entities/Ticket'; 
+import { RouteRepository } from '../../../domain/repositories/RouteRepository';
+import { TicketRepository } from '../../../domain/repositories/TicketRepository';
 import { randomUUID } from 'crypto';
 
 interface ReserveTicketUseCaseRequest {
@@ -30,8 +30,8 @@ export class ReserveTicketUseCase {
       throw new Error('Rota não encontrada.');
     }
     
-    // Verifica se há assentos disponíveis
-    if (route.availableSeats <= 0) {
+    // Verifica se há assentos disponíveis  
+    if (route.totalSeats <= 0) {
       throw new Error('Não há assentos disponíveis para esta rota.');
     }
     
@@ -51,7 +51,7 @@ export class ReserveTicketUseCase {
     
     // Atualiza o número de assentos disponíveis
     await this.routeRepository.update(routeId, {
-      availableSeats: route.availableSeats - 1
+      totalSeats: route.totalSeats - 1
     });
     
     return { ticket };

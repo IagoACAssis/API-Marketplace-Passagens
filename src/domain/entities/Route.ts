@@ -4,18 +4,35 @@ export enum TransportType {
   FERRY = 'FERRY'
 }
 
+export type LocationType = 'city' | 'terminal' | 'airport' | 'port';
+
 export interface Route {
   id: string;
   companyId: string;
+  
+  // Origem
   origin: string;
+  originState?: string;
+  originCountry: string;
+  originType: LocationType;
+  
+  // Destino
   destination: string;
+  destinationState?: string;
+  destinationCountry: string;
+  destinationType: LocationType;
+  
+  // Horários
   departureTime: Date;
   arrivalTime: Date;
+  
+  // Detalhes
   price: number;
   type: TransportType;
-  capacity: number;
-  availableSeats: number;
+  totalSeats: number;
   active: boolean;
+  
+  // Metadados
   createdAt: Date;
   updatedAt: Date;
 }

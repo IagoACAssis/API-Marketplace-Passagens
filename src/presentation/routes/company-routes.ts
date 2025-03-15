@@ -1,9 +1,9 @@
-import { ApproveCompanyUseCase } from "@/application/useCases/companies/ApproveCompanyUseCase";
-import { CreateCompanyUseCase } from "@/application/useCases/companies/CreateCompanyUseCase";
-import { DeleteCompanyUseCase } from "@/application/useCases/companies/DeleteCompanyUseCase";
-import { ListCompaniesUseCase } from "@/application/useCases/companies/ListCompaniesUseCase";
-import { UpdateCompanyUseCase } from "@/application/useCases/companies/UpdateCompanyUseCase";
-import { PrismaCompanyRepository } from "@/infrastructure/database/prisma/repositories/PrismaCompanyRepository";
+import { ApproveCompanyUseCase } from "../../application/useCases/companies/ApproveCompanyUseCase";
+import { CreateCompanyUseCase } from "../../application/useCases/companies/CreateCompanyUseCase";
+import { DeleteCompanyUseCase } from "../../application/useCases/companies/DeleteCompanyUseCase";
+import { ListCompaniesUseCase } from "../../application/useCases/companies/ListCompaniesUseCase";
+import { UpdateCompanyUseCase } from "../../application/useCases/companies/UpdateCompanyUseCase";
+import { PrismaCompanyRepository } from "../../infrastructure/database/prisma/repositories/PrismaCompanyRepository";
 import { FastifyInstance } from "fastify";
 import { CompanyController } from "../controllers/CompanyController";
 import { authenticate } from "../middlewares/authenticate";
@@ -21,7 +21,7 @@ export async function companyRoutes(app: FastifyInstance) {
   const updateCompanyUseCase = new UpdateCompanyUseCase(companyRepository);
 
   const companyController = new CompanyController(createCompanyUseCase, updateCompanyUseCase, deleteCompanyUseCase, listCompaniesUseCase, approveCompanyUseCase);
-
+  
   // Rotas
   app.get('/list', (req, reply) => companyController.list(req, reply));
   app.post('/create', (req, reply) => companyController.create(req, reply));

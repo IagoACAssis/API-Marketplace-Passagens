@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 // Importações das rotas
 import { setupRoutes } from './presentation/routes';
+import { jwtConfig } from './infrastructure/auth/jwt-config';
 
 // Carrega variáveis de ambiente
 dotenv.config();
@@ -23,7 +24,10 @@ async function bootstrap() {
 
   // Configuração de JWT
   await server.register(jwt, {
-    secret: process.env.JWT_SECRET || 'supersecret'
+    secret: jwtConfig.secret,
+    sign: {
+      expiresIn: jwtConfig.expiresIn
+    }
   });
 
   // Registra as rotas

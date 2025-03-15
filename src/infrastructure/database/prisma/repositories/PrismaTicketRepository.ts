@@ -1,5 +1,5 @@
-import { Ticket, TicketStatus } from '@domain/entities/Ticket';
-import { TicketRepository } from '@domain/repositories/TicketRepository';
+import { Ticket, TicketStatus } from '../../../../domain/entities/Ticket';
+import { TicketRepository } from '../../../../domain/repositories/TicketRepository';
 import { prisma } from '../client';
 
 export class PrismaTicketRepository implements TicketRepository {

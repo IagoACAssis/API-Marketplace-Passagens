@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { UserRole as PrismaUserRole } from '@prisma/client';
 
 interface UserPayload {
   sub: string;
@@ -31,11 +32,19 @@ export async function authenticate(
     }
 
     try {
-      // Verifica se o token é válido
-      const user = request.server.jwt.verify<UserPayload>(token);
+      // Verifica se o token é válido e obtém o payload tipado
+      const payload = request.server.jwt.verify<{
+        id: string;
+        companyId?: string;
+        role: PrismaUserRole;
+        email: string;
+        name: string;
+        iat: number;
+        exp: number;
+      }>(token);
       
       // Adiciona as informações do usuário ao request
-      request.user = user;
+      (request as any).user = payload;
     } catch (error) {
       return reply.status(401).send({ message: 'Token inválido ou expirado.' });
     }

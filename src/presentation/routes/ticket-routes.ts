@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { TicketController } from '../controllers/TicketController';
-import { ReserveTicketUseCase } from '@application/useCases/tickets/ReserveTicketUseCase';
-import { PrismaTicketRepository } from '@infrastructure/database/prisma/repositories/PrismaTicketRepository';
-import { PrismaRouteRepository } from '@infrastructure/database/prisma/repositories/PrismaRouteRepository';
+import { ReserveTicketUseCase } from '../../application/useCases/tickets/ReserveTicketUseCase';
+import { PrismaTicketRepository } from '../../infrastructure/database/prisma/repositories/PrismaTicketRepository';
+import { PrismaRouteRepository } from '../../infrastructure/database/prisma/repositories/PrismaRouteRepository';
 import { authenticate } from '../middlewares/authenticate';
 
 export async function ticketRoutes(app: FastifyInstance) {

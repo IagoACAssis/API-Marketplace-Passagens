@@ -78,22 +78,29 @@ model Company {
 }
 
 model Route {
-  id             String        @id @default(uuid())
-  companyId      String
-  origin         String
-  destination    String
-  departureTime  DateTime
-  arrivalTime    DateTime
-  price          Decimal       @db.Decimal(10, 2)
-  type           TransportType
-  capacity       Int
-  availableSeats Int
-  active         Boolean       @default(true)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                 String         @id @default(uuid())
+  companyId          String
+  origin             String
+  originState        String?
+  originCountry      String
+  originType         String
+  destination        String
+  destinationState   String?
+  destinationCountry String
+  destinationType    String
+  departureTime      DateTime
+  arrivalTime        DateTime
+  price              Float
+  type               String
+  totalSeats         Int
+  active             Boolean        @default(true)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  company            Company        @relation(fields: [companyId], references: [id])
+  Ticket             Ticket[]
+  routeAmenities     RouteAmenity[]
 
-  company Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  tickets Ticket[]
+  @@map("routes")
 }
 
 model Ticket {
@@ -124,4 +131,25 @@ model Payment {
   updatedAt  DateTime      @updatedAt
 
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id             String         @id @default(uuid())
+  name           String         @unique
+  icon           String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  routeAmenities RouteAmenity[]
+
+  @@map("amenities")
+}
+
+model RouteAmenity {
+  routeId   String
+  amenityId String
+  route     Route   @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  amenity   Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([routeId, amenityId])
+  @@map("route_amenities")
 }

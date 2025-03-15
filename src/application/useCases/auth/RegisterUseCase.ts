@@ -1,5 +1,5 @@
-import { User, UserRole } from '@domain/entities/User';
-import { UserRepository } from '@domain/repositories/UserRepository';
+import { User, UserRole } from '../../../domain/entities/User';
+import { UserRepository } from '../../../domain/repositories/UserRepository';
 import { hash } from 'bcrypt';
 
 interface RegisterUseCaseRequest {

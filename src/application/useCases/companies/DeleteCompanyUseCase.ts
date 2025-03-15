@@ -1,4 +1,4 @@
-import { CompanyRepository } from "@/domain/repositories/CompanyRepository";
+import { CompanyRepository } from '../../../domain/repositories/CompanyRepository';
 
 export class DeleteCompanyUseCase {
   constructor(private companyRepository: CompanyRepository) {}

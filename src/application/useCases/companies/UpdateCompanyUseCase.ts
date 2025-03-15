@@ -1,5 +1,5 @@
-import { Company } from "@/domain/entities/Company";
-import { CompanyRepository } from "@/domain/repositories/CompanyRepository";
+import { Company } from "../../../domain/entities/Company";
+import { CompanyRepository } from "../../../domain/repositories/CompanyRepository";
 
 export class UpdateCompanyUseCase {
   constructor(private companyRepository: CompanyRepository) {}

@@ -1,4 +1,4 @@
-import { UserRole } from '@/domain/entities/User';
+import { UserRole } from '../domain/entities/User';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 

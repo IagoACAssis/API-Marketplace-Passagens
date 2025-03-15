@@ -1,5 +1,7 @@
 import { UserRepository } from '@domain/repositories/UserRepository';
 import { compare } from 'bcrypt';
+import { UserRole as PrismaUserRole } from '@prisma/client';
+
 
 interface AuthenticateUseCaseRequest {
   email: string;
@@ -10,7 +12,8 @@ interface AuthenticateUseCaseResponse {
   userId: string;
   name: string;
   email: string;
-  role: string;
+  role: PrismaUserRole;
+  companyId?: string;
 }
 
 /**
@@ -41,7 +44,8 @@ export class AuthenticateUseCase {
       userId: user.id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role as unknown as PrismaUserRole,
+      companyId: user.companyId || undefined
     };
   }
 }

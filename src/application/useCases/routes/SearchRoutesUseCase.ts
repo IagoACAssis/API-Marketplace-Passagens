@@ -1,4 +1,4 @@
-import { RouteRepository } from '@domain/repositories/RouteRepository';
+import { RouteRepository } from '../../../domain/repositories/RouteRepository';
 
 interface SearchRoutesUseCaseRequest {
   origin?: string;

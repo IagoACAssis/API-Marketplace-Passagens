@@ -1,6 +1,6 @@
-import { Company } from '@domain/entities/Company';
-import { CompanyRepository } from '@domain/repositories/CompanyRepository';
-import { UserRepository } from '@domain/repositories/UserRepository';
+import { Company } from '../../../domain/entities/Company';
+import { CompanyRepository } from '../../../domain/repositories/CompanyRepository';
+
 
 interface CreateCompanyUseCaseRequest {
   cnpj: string;
