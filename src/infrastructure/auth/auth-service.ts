@@ -26,9 +26,11 @@ export class AuthService {
   generateUserToken(payload: {
     id: string;
     companyId?: string;
-    role: UserRole;
-    email: string;
     name: string;
+    email: string;    
+    role: UserRole;
+    
+
   }): string {
     return this.generateToken(payload);
   }

@@ -7,4 +7,6 @@ export interface CompanyRepository {
   update(id: string, data: Partial<Company>): Promise<Company>;
   delete(id: string): Promise<void>;
   listAll(page: number, limit: number): Promise<{ companies: Company[], total: number }>;
+  approve(id: string): Promise<Company>;
+  reject(id: string, reason: string): Promise<Company>;
 }

@@ -1,13 +1,15 @@
+import { CompanyStatus } from '@prisma/client';
 import { Company } from '../../../domain/entities/Company';
 import { CompanyRepository } from '../../../domain/repositories/CompanyRepository';
 
 
 interface CreateCompanyUseCaseRequest {
+  tradingName?: string;
+  legalName?: string;  
   cnpj: string;
-  tradingName: string;
-  legalName: string;
-  logo?: string;
-  document?: string;
+  email: string;
+  phone: string;
+  address: string;
 }
 
 export class CreateCompanyUseCase {
@@ -16,7 +18,7 @@ export class CreateCompanyUseCase {
   ) {}
 
   async execute(request: CreateCompanyUseCaseRequest): Promise<Company> {
-    const { cnpj, tradingName, legalName, logo, document } = request;    
+    const { tradingName, legalName, cnpj, email, phone, address } = request;    
 
     // Verifica se já existe uma empresa com este CNPJ
     const existingCompany = await this.companyRepository.findByCNPJ(cnpj);
@@ -27,12 +29,13 @@ export class CreateCompanyUseCase {
  
     // Cria a empresa
     const company = await this.companyRepository.create({      
-      cnpj,
       tradingName,
       legalName,
-      logo,
-      document,
-      approved: false
+      cnpj,
+      email,
+      phone,
+      address,
+      status: CompanyStatus.PENDING
     });
 
     return company;

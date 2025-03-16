@@ -156,7 +156,7 @@ export class PrismaRouteRepository implements RouteRepository {
           company: {
             select: {
               tradingName: true,
-              logo: true
+              legalName: true,
             }
           }
         }
@@ -314,7 +314,7 @@ export class PrismaRouteRepository implements RouteRepository {
             select: {
               id: true,
               tradingName: true,
-              logo: true
+              legalName: true,
             }
           }
         }
@@ -443,7 +443,7 @@ export class PrismaRouteRepository implements RouteRepository {
     return routeAmenities.map(ra => ra.amenity.name);
   }
   
-  async getRouteCompany(routeId: string): Promise<{ id: string; name: string; logo?: string }> {
+  async getRouteCompany(routeId: string): Promise<{ id: string; tradingName: string; legalName: string }> {
     const route = await prisma.route.findUnique({
       where: { id: routeId },
       include: {
@@ -451,7 +451,7 @@ export class PrismaRouteRepository implements RouteRepository {
           select: {
             id: true,
             tradingName: true,
-            logo: true
+            legalName: true
           }
         }
       }
@@ -463,8 +463,8 @@ export class PrismaRouteRepository implements RouteRepository {
     
     return {
       id: route.company.id,
-      name: route.company.tradingName,
-      logo: route.company.logo || undefined
+      tradingName: route.company.tradingName || '',
+      legalName: route.company.legalName || ''
     };
   }
 

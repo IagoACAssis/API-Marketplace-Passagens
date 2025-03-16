@@ -56,8 +56,8 @@ export interface RouteRepository {
   // Obter informações da empresa de uma rota
   getRouteCompany(routeId: string): Promise<{
     id: string;
-    name: string;
-    logo?: string;
+    tradingName: string;
+    legalName: string;
   }>;
   
   // Verificar se uma rota tem tickets ativos

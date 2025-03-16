@@ -11,8 +11,7 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   cpf: z.string().optional(),
-  phone: z.string().optional(),
-  role: z.enum([UserRole.CUSTOMER, UserRole.COMPANY]).optional()
+  phone: z.string().optional()
 });
 
 const authenticateSchema = z.object({
@@ -35,15 +34,14 @@ export class AuthController {
    */
   async register(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { name, email, password, cpf, phone, role } = registerSchema.parse(request.body);
+      const { name, email, password, cpf, phone } = registerSchema.parse(request.body);
 
       const { user } = await this.registerUseCase.execute({
         name,
         email,
         password,
         cpf,
-        phone,
-        role
+        phone        
       });
 
       return reply.status(201).send({ user });

@@ -1,5 +1,6 @@
-import { Company } from '@domain/entities/Company';
-import { CompanyRepository } from '@domain/repositories/CompanyRepository';
+import { CompanyStatus } from '@prisma/client';
+import { Company } from '../../../../domain/entities/Company';
+import { CompanyRepository } from '../../../../domain/repositories/CompanyRepository';
 import { prisma } from '../client';
 
 export class PrismaCompanyRepository implements CompanyRepository {
@@ -12,8 +13,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return {
       ...company,
-      logo: company.logo || undefined,
-      document: company.document || undefined
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
     };
   }
 
@@ -26,8 +32,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return {
       ...company,
-      logo: company.logo || undefined,
-      document: company.document || undefined
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
     };
   }
 
@@ -38,8 +49,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return {
       ...company,
-      logo: company.logo || undefined,
-      document: company.document || undefined
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
     };
   }
 
@@ -51,8 +67,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return {
       ...company,
-      logo: company.logo || undefined,
-      document: company.document || undefined
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
     };
   }
 
@@ -76,8 +97,49 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return { companies: companies.map(company => ({
       ...company,
-      logo: company.logo || undefined,
-      document: company.document || undefined
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
     })), total };
+  }
+
+  async approve(id: string): Promise<Company> {
+    const company = await prisma.company.update({
+      where: { id },
+      data: { status: CompanyStatus.APPROVED, approvedAt: new Date() }
+    });
+
+    return {
+      ...company,
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
+    };
+  }
+
+  async reject(id: string, reason: string): Promise<Company> {
+    const company = await prisma.company.update({
+      where: { id },
+      data: { status: CompanyStatus.REJECTED, rejectedAt: new Date(), rejectionReason: reason }
+    }); 
+
+    return {
+      ...company,
+      tradingName: company.tradingName || undefined,
+      legalName: company.legalName || undefined,
+      phone: company.phone || null,
+      address: company.address || null,
+      approvedAt: company.approvedAt || undefined,
+      rejectedAt: company.rejectedAt || undefined,
+      rejectionReason: company.rejectionReason || undefined
+    };
   }
 }
