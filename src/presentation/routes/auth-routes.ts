@@ -12,8 +12,9 @@ export async function authRoutes(app: FastifyInstance) {
   const authenticateUseCase = new AuthenticateUseCase(userRepository);
   const authService = new AuthService(app);
   const authController = new AuthController(registerUseCase, authenticateUseCase, authService);
-
-  // Rotas de autenticação
+  
+  // registro de usuario
   app.post('/register', (req, reply) => authController.register(req, reply));
+  // login de usuario
   app.post('/login', (req, reply) => authController.authenticate(req, reply));
 }

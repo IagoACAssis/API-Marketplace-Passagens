@@ -2,9 +2,10 @@ import { UserRole } from '../domain/entities/User';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 
-
+// cria o prisma client
 const prisma = new PrismaClient();
 
+// cria o administrador
 async function main() {
   try {
     // Verifica se já existe um admin
@@ -13,7 +14,7 @@ async function main() {
         role: UserRole.ADMIN
       }
     });
-
+    // verifica se o administrador existe
     if (adminExists) {
       console.log('Administrador já existe. Pulando criação.');
       return;

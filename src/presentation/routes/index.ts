@@ -10,8 +10,13 @@ export function setupRoutes(app: FastifyInstance) {
   });
 
   // Registra as rotas da API
+  
+  // rotas de autenticação
   app.register(authRoutes, { prefix: '/auth' });
+  // rotas de rota
   app.register(routeRoutes, { prefix: '/routes' });
+  // rotas de ticket
   app.register(ticketRoutes, { prefix: '/tickets' });
+  // rotas de empresa
   app.register(companyRoutes, { prefix: '/company' });
 }

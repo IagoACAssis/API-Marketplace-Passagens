@@ -2,8 +2,10 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 
 export async function isAdmin(request: FastifyRequest, reply: FastifyReply) {
   try {
+    // pega o usuario do request
     const user = request.user as { role?: string };
     
+    // verifica se o usuario é administrador
     if (!user || user.role !== 'ADMIN') {
       return reply.code(403).send({
         error: 'Acesso negado. Esta operação requer privilégios de administrador.'

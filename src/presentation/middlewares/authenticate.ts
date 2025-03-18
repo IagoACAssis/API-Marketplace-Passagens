@@ -26,7 +26,8 @@ export async function authenticate(
   try {
     // Verifica se existe um token de autenticação
     const token = request.headers.authorization?.split(' ')[1];
-
+    
+    // verifica se o token existe
     if (!token) {
       return reply.status(401).send({ message: 'Token não fornecido.' });
     }

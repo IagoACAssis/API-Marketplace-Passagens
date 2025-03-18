@@ -1,4 +1,4 @@
-import { UserRepository } from '@domain/repositories/UserRepository';
+import { UserRepository } from '../../../domain/repositories/UserRepository';
 import { compare } from 'bcrypt';
 import { UserRole as PrismaUserRole } from '@prisma/client';
 

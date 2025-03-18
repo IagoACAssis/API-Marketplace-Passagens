@@ -98,4 +98,36 @@ export class PrismaTicketRepository implements TicketRepository {
       status: ticket.status as TicketStatus
     }));
   }
+
+  /**
+   * Busca a rota associada a um ticket
+   */
+  async getTicketRoute(ticketId: string): Promise<{ id: string, origin: string, destination: string, departureTime: Date, price: number }> {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+      include: {
+        route: {
+          select: {
+            id: true,
+            origin: true,
+            destination: true,
+            departureTime: true,
+            price: true
+          }
+        }
+      }
+    });
+
+    if (!ticket || !ticket.route) {
+      throw new Error('Rota não encontrada para este ticket');
+    }
+
+    return {
+      id: ticket.route.id,
+      origin: ticket.route.origin,
+      destination: ticket.route.destination,
+      departureTime: ticket.route.departureTime,
+      price: ticket.route.price
+    };
+  }
 }

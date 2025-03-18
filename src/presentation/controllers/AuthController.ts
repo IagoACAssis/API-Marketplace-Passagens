@@ -34,8 +34,10 @@ export class AuthController {
    */
   async register(request: FastifyRequest, reply: FastifyReply) {
     try {
+      // pega os dados do usuario
       const { name, email, password, cpf, phone } = registerSchema.parse(request.body);
 
+      // registra o usuario
       const { user } = await this.registerUseCase.execute({
         name,
         email,
@@ -44,6 +46,7 @@ export class AuthController {
         phone        
       });
 
+      // retorna o usuario criado
       return reply.status(201).send({ user });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -79,6 +82,7 @@ export class AuthController {
         email: user.email
       });
 
+      // retorna o usuario e o token
       return reply.send({ user, token });
     } catch (error) {
       if (error instanceof z.ZodError) {

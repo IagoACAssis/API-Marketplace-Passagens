@@ -1,23 +1,11 @@
-export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  REFUNDED = 'REFUNDED',
-  FAILED = 'FAILED'
-}
-
-export enum PaymentMethod {
-  CREDIT_CARD = 'CREDIT_CARD',
-  DEBIT_CARD = 'DEBIT_CARD',
-  PIX = 'PIX',
-  BOLETO = 'BOLETO'
-}
+import { PaymentMethod, PaymentStatus, Prisma } from '@prisma/client';
 
 export interface Payment {
   id: string;
-  ticketId: string;
+  userId: string;
   status: PaymentStatus;
   method: PaymentMethod;
-  amount: number;
+  amount: Prisma.Decimal | number;
   externalId?: string;
   createdAt: Date;
   updatedAt: Date;

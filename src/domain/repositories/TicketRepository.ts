@@ -8,4 +8,15 @@ export interface TicketRepository {
   updateStatus(id: string, status: TicketStatus): Promise<Ticket>;
   findByUser(userId: string, page: number, limit: number): Promise<{ tickets: Ticket[], total: number }>;
   findByRoute(routeId: string): Promise<Ticket[]>;
+  
+  /**
+   * Busca a rota associada a um ticket
+   */
+  getTicketRoute(ticketId: string): Promise<{ 
+    id: string, 
+    origin: string, 
+    destination: string, 
+    departureTime: Date, 
+    price: number 
+  }>;
 }

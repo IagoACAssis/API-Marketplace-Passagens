@@ -1,6 +1,6 @@
 {
   "name": "passagens-marketplace-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API para marketplace de passagens de ônibus, barcos e ferry boats",
   "main": "dist/server.js",
   "scripts": {

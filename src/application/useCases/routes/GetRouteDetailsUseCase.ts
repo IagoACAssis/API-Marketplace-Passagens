@@ -12,8 +12,9 @@ interface GetRouteDetailsUseCaseResponse {
   amenities: string[];
   company: {
     id: string;
-    name: string;
-    logo?: string;
+    tradingName: string;
+    legalName: string;
+    
   };
 }
 
@@ -41,7 +42,11 @@ export class GetRouteDetailsUseCase {
       route,
       availableSeats,
       amenities,
-      company
+      company: {
+        id: company.id,
+        tradingName: company.tradingName,
+        legalName: company.legalName               
+      } 
     };
   }
 } 
