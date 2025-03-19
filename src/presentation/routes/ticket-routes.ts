@@ -1,13 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { TicketController } from '../controllers/TicketController';
-import { ReserveTicketUseCase } from '../../application/useCases/tickets/ReserveTicketUseCase';
 import { PayMultipleTicketsUseCase } from '../../application/useCases/tickets/PayMultipleTicketsUseCase';
 import { PrismaTicketRepository } from '../../infrastructure/database/prisma/repositories/PrismaTicketRepository';
-import { PrismaRouteRepository } from '../../infrastructure/database/prisma/repositories/PrismaRouteRepository';
 import { PrismaPaymentRepository } from '../../infrastructure/database/prisma/repositories/PrismaPaymentRepository';
 import { MockPaymentGateway } from '../../infrastructure/gateways/MockPaymentGateway';
 import { authenticate } from '../middlewares/authenticate';
 import { verifyJwt } from '../middlewares/verify-jwt';
+import { makeReserveTicketUseCase } from '../factories/make-reserve-ticket-use-case';
 
 export async function ticketRoutes(app: FastifyInstance) {
   // Registra o middleware de autenticação
@@ -15,11 +14,11 @@ export async function ticketRoutes(app: FastifyInstance) {
 
   // Inicializa dependências
   const ticketRepository = new PrismaTicketRepository();
-  const routeRepository = new PrismaRouteRepository();
   const paymentRepository = new PrismaPaymentRepository();
   const paymentGateway = new MockPaymentGateway();
   
-  const reserveTicketUseCase = new ReserveTicketUseCase(ticketRepository, routeRepository);
+  // Usa os factories para criar os casos de uso
+  const reserveTicketUseCase = makeReserveTicketUseCase();
   
   // Usa o "as any" temporariamente para evitar erros de tipagem até que a implementação seja corrigida
   const payMultipleTicketsUseCase = new PayMultipleTicketsUseCase(

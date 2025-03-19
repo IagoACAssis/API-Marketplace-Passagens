@@ -287,10 +287,20 @@ export class RouteController {
       
       if (routeData.departureTime) {
         departureTime = new Date(routeData.departureTime);
+        // Preserva a data/hora exata fornecida pelo usuário
+        const parsedDate = new Date(routeData.departureTime);
+        if (!isNaN(parsedDate.getTime())) {
+          departureTime = parsedDate;
+        }
       }
       
       if (routeData.arrivalTime) {
         arrivalTime = new Date(routeData.arrivalTime);
+        // Preserva a data/hora exata fornecida pelo usuário
+        const parsedDate = new Date(routeData.arrivalTime);
+        if (!isNaN(parsedDate.getTime())) {
+          arrivalTime = parsedDate;
+        }
       }
       
       // Se ambas as datas forem fornecidas, verifica se a chegada é posterior à partida

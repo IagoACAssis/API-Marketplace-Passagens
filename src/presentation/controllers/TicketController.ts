@@ -7,7 +7,20 @@ import { PayMultipleTicketsUseCase } from '../../application/useCases/tickets/Pa
 // Removido o schema de reserva única, apenas mantemos o esquema múltiplo
 // que também pode lidar com uma única reserva
 const reserveMultipleTicketsSchema = z.object({
-  routeId: z.string().uuid(),
+  routeId: z.string().refine(
+    (value) => {
+      // Aceita UUID normal ou ID de rota virtual (virtual-{uuid}-{date})
+      return (
+        // UUID padrão
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ||
+        // Formato de rota virtual: "virtual-UUID-YYYY-MM-DD"
+        /^virtual-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-\d{4}-\d{2}-\d{2}$/i.test(value)
+      );
+    },
+    {
+      message: "ID de rota inválido. Deve ser um UUID válido ou formato de rota virtual (virtual-UUID-YYYY-MM-DD)"
+    }
+  ),
   passengers: z.array(z.object({
     name: z.string().min(3),
     cpf: z.string().min(11),

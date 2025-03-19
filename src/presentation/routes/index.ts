@@ -1,22 +1,21 @@
 import { FastifyInstance } from 'fastify';
 import { authRoutes } from './auth-routes';
-import { routeRoutes } from './route-routes';
-import { ticketRoutes } from './ticket-routes';
 import { companyRoutes } from './company-routes';
+import { ticketRoutes } from './ticket-routes';
+import { routeRoutes } from './route-routes';
+import { routeTemplateRoutes } from './route-template-routes';
 
-export function setupRoutes(app: FastifyInstance) {
+export async function setupRoutes(app: FastifyInstance) {
   app.get('/health', async () => {
     return { status: 'ok' };
   });
 
-  // Registra as rotas da API
-  
-  // rotas de autenticação
+  // Público
   app.register(authRoutes, { prefix: '/auth' });
-  // rotas de rota
-  app.register(routeRoutes, { prefix: '/routes' });
-  // rotas de ticket
+  
+  // Protegido
+  app.register(companyRoutes, { prefix: '/companies' });
   app.register(ticketRoutes, { prefix: '/tickets' });
-  // rotas de empresa
-  app.register(companyRoutes, { prefix: '/company' });
+  app.register(routeRoutes, { prefix: '/routes' });
+  app.register(routeTemplateRoutes, { prefix: '/route-templates' });
 }

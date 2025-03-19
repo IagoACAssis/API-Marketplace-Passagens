@@ -2,6 +2,7 @@ import { Route, TransportType, LocationType } from '../../../../domain/entities/
 import { RouteRepository, Location } from '../../../../domain/repositories/RouteRepository';
 import { prisma } from '../client'; 
 import { TicketStatus } from '@prisma/client';
+import { DateUtils } from '../../../../presentation/utils/date-utils';
 
 export class PrismaRouteRepository implements RouteRepository {
   async findById(id: string): Promise<Route | null> {
@@ -129,11 +130,8 @@ export class PrismaRouteRepository implements RouteRepository {
     }
     
     if (date) {
-      const startOfDay = new Date(date);
-      startOfDay.setUTCHours(0, 0, 0, 0);
-      
-      const endOfDay = new Date(date);
-      endOfDay.setUTCHours(23, 59, 59, 999);
+      const startOfDay = DateUtils.startOfDayUTC(date);
+      const endOfDay = DateUtils.endOfDayUTC(date);
       
       where.departureTime = {
         gte: startOfDay,
@@ -214,11 +212,8 @@ export class PrismaRouteRepository implements RouteRepository {
     
     // Filtro por data
     if (date) {
-      const startOfDay = new Date(date);
-      startOfDay.setUTCHours(0, 0, 0, 0);
-      
-      const endOfDay = new Date(date);
-      endOfDay.setUTCHours(23, 59, 59, 999);
+      const startOfDay = DateUtils.startOfDayUTC(date);
+      const endOfDay = DateUtils.endOfDayUTC(date);
       
       where.departureTime = {
         gte: startOfDay,
@@ -263,7 +258,7 @@ export class PrismaRouteRepository implements RouteRepository {
       if (departureTimeStart) {
         const [hours, minutes] = departureTimeStart.split(':').map(Number);
         const startTime = new Date(date || new Date());
-        startTime.setHours(hours, minutes, 0, 0);
+        startTime.setUTCHours(hours, minutes, 0, 0);
         
         where.departureTime.gte = startTime;
       }
@@ -271,7 +266,7 @@ export class PrismaRouteRepository implements RouteRepository {
       if (departureTimeEnd) {
         const [hours, minutes] = departureTimeEnd.split(':').map(Number);
         const endTime = new Date(date || new Date());
-        endTime.setHours(hours, minutes, 59, 999);
+        endTime.setUTCHours(hours, minutes, 59, 999);
         
         where.departureTime.lte = endTime;
       }

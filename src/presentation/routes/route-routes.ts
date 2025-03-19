@@ -11,14 +11,16 @@ import { DeleteRouteUseCase } from '../../application/useCases/routes/DeleteRout
 import { ListCompanyRoutesUseCase } from '../../application/useCases/routes/ListCompanyRoutesUseCase';
 import { verifyJwt } from '../middlewares/verify-jwt';
 import { verifyCompanyRole } from '../middlewares/verify-company-role';
-
-
+import { PrismaRouteTemplateRepository } from '../../infrastructure/database/prisma/repositories/PrismaRouteTemplateRepository';
+import { DynamicRouteGenerationService } from '../../application/services/DynamicRouteGenerationService';
 export async function routeRoutes(app: FastifyInstance) {
   // Inicializa dependências
   const routeRepository = new PrismaRouteRepository();
-  
+  const routeTemplateRepository = new PrismaRouteTemplateRepository();
+  const dynamicRouteGenerationService = new DynamicRouteGenerationService(routeTemplateRepository, routeRepository);
+
   // Inicializa casos de uso
-  const searchRoutesUseCase = new SearchRoutesUseCase(routeRepository);
+  const searchRoutesUseCase = new SearchRoutesUseCase(routeRepository, dynamicRouteGenerationService);
   const getRouteDetailsUseCase = new GetRouteDetailsUseCase(routeRepository);
   const searchLocationsUseCase = new SearchLocationsUseCase(routeRepository);
   const advancedSearchRoutesUseCase = new AdvancedSearchRoutesUseCase(routeRepository);
@@ -26,7 +28,7 @@ export async function routeRoutes(app: FastifyInstance) {
   const updateRouteUseCase = new UpdateRouteUseCase(routeRepository);
   const deleteRouteUseCase = new DeleteRouteUseCase(routeRepository);
   const listCompanyRoutesUseCase = new ListCompanyRoutesUseCase(routeRepository);
-  
+
   // Inicializa controlador
   const routeController = new RouteController(
     searchRoutesUseCase,
@@ -40,21 +42,21 @@ export async function routeRoutes(app: FastifyInstance) {
   );
 
   // Rotas públicas (sem autenticação)
-  
+
   // Rotas de busca básica
   app.get('/search', (req, reply) => routeController.search(req, reply));
-  
+
   // Rota para busca de locais (autocomplete)
   app.get('/locations', (req, reply) => routeController.searchLocations(req, reply));
-  
+
   // Rota para busca avançada
   app.get('/search/advanced', (req, reply) => routeController.advancedSearch(req, reply));
-  
+
   // Rota para detalhes de uma viagem específica
   app.get('/:id', (req, reply) => routeController.getDetails(req, reply));
-  
+
   // Rotas protegidas (requerem autenticação e permissão de empresa)
-  
+
   // Grupo de rotas para gestão (requer autenticação)
   app.register(async (protectedRoutes) => {
     // Aplica middleware de autenticação
@@ -67,10 +69,10 @@ export async function routeRoutes(app: FastifyInstance) {
 
     // Criar nova rota
     protectedRoutes.post('/', (req, reply) => routeController.create(req, reply));
-    
+
     // Atualizar rota existente
     protectedRoutes.put('/:id', (req, reply) => routeController.update(req, reply));
-    
+
     // Excluir rota
     protectedRoutes.delete('/:id', (req, reply) => routeController.delete(req, reply));
   });

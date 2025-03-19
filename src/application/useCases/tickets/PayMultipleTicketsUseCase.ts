@@ -92,9 +92,8 @@ export class PayMultipleTicketsUseCase {
         // Atualizar o status do ticket para PAID
         await this.ticketRepository.updateStatus(ticketId, TicketStatus.PAID);
         
-        // Nota: A atualização da referência paymentId deve ser tratada no modelo Ticket
-        // ou no PrismaTicketRepository. Não estamos incluindo aqui porque a interface Ticket
-        // não tem essa propriedade definida.
+        // Associar o paymentId ao ticket
+        await this.ticketRepository.updatePaymentId(ticketId, payment.id);
       }
     }
 

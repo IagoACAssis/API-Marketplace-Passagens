@@ -70,21 +70,22 @@ model User {
 }
 
 model Company {
-  id              String        @id @default(uuid())
+  id              String          @id @default(uuid())
   tradingName     String?
   legalName       String?
-  cnpj            String        @unique
-  email           String        @unique
+  cnpj            String          @unique
+  email           String          @unique
   phone           String?
   address         String?
-  status          CompanyStatus @default(PENDING)
+  status          CompanyStatus   @default(PENDING)
   approvedAt      DateTime?
   rejectedAt      DateTime?
   rejectionReason String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   routes          Route[]
   User            User[]
+  RouteTemplate   RouteTemplate[]
 
   @@map("Company")
 }
@@ -166,4 +167,31 @@ model RouteAmenity {
 
   @@id([routeId, amenityId])
   @@map("route_amenity")
+}
+
+model RouteTemplate {
+  id                 String   @id @default(uuid())
+  companyId          String
+  origin             String
+  originState        String?
+  originCountry      String
+  originType         String
+  destination        String
+  destinationState   String?
+  destinationCountry String
+  destinationType    String
+  departureTime      String // Formato HH:MM
+  arrivalTime        String // Formato HH:MM
+  daysOfWeek         String // JSON: [0,1,2,3,4,5,6]
+  price              Float
+  type               String
+  totalSeats         Int
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  company            Company  @relation(fields: [companyId], references: [id])
+
+  @@index([origin, destination])
+  @@index([companyId])
+  @@map("RouteTemplate")
 }

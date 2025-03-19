@@ -31,6 +31,7 @@ export interface Route {
   type: TransportType;
   totalSeats: number;
   active: boolean;
+  isVirtual?: boolean;
   
   // Metadados
   createdAt: Date;

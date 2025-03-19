@@ -6,6 +6,7 @@ export interface TicketRepository {
   create(ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>): Promise<Ticket>;
   update(id: string, data: Partial<Ticket>): Promise<Ticket>;
   updateStatus(id: string, status: TicketStatus): Promise<Ticket>;
+  updatePaymentId(id: string, paymentId: string): Promise<Ticket>;
   findByUser(userId: string, page: number, limit: number): Promise<{ tickets: Ticket[], total: number }>;
   findByRoute(routeId: string): Promise<Ticket[]>;
   

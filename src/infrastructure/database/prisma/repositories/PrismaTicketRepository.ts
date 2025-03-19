@@ -53,15 +53,21 @@ export class PrismaTicketRepository implements TicketRepository {
   }
 
   async updateStatus(id: string, status: TicketStatus): Promise<Ticket> {
-    const ticket = await prisma.ticket.update({
-      where: { id },
-      data: { status }
-    });
-    
-    return {
-      ...ticket,
-      status: ticket.status as TicketStatus
-    };
+    try {
+      const ticket = await prisma.ticket.update({
+        where: { id },
+        data: { status }
+      });
+
+      return {
+        ...ticket,
+        status: ticket.status as TicketStatus,
+        createdAt: new Date(ticket.createdAt),
+        updatedAt: new Date(ticket.updatedAt),
+      };
+    } catch (error: any) {
+      throw new Error(`Error updating ticket status: ${error.message}`);
+    }
   }
 
   async findByUser(userId: string, page: number, limit: number): Promise<{ tickets: Ticket[], total: number }> {
@@ -97,6 +103,27 @@ export class PrismaTicketRepository implements TicketRepository {
       ...ticket,
       status: ticket.status as TicketStatus
     }));
+  }
+
+  /**
+   * Atualiza o ID de pagamento de um ticket
+   */
+  async updatePaymentId(id: string, paymentId: string): Promise<Ticket> {
+    try {
+      const ticket = await prisma.ticket.update({
+        where: { id },
+        data: { paymentId }
+      });
+
+      return {
+        ...ticket,
+        status: ticket.status as TicketStatus,
+        createdAt: new Date(ticket.createdAt),
+        updatedAt: new Date(ticket.updatedAt),
+      };
+    } catch (error: any) {
+      throw new Error(`Error updating ticket payment ID: ${error.message}`);
+    }
   }
 
   /**

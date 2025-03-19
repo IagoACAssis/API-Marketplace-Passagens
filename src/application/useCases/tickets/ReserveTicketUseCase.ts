@@ -1,6 +1,7 @@
 import { TicketStatus } from '../../../domain/entities/Ticket'; 
 import { RouteRepository } from '../../../domain/repositories/RouteRepository';
 import { TicketRepository } from '../../../domain/repositories/TicketRepository';
+import { DynamicRouteGenerationService } from '../../services/DynamicRouteGenerationService';
 import { randomUUID } from 'crypto';
 
 interface ReserveTicketUseCaseRequest {
@@ -17,21 +18,35 @@ interface ReserveTicketUseCaseRequest {
 export class ReserveTicketUseCase {
   constructor(
     private ticketRepository: TicketRepository,
-    private routeRepository: RouteRepository
+    private routeRepository: RouteRepository,
+    private dynamicRouteService: DynamicRouteGenerationService
   ) {}
 
   async execute(request: ReserveTicketUseCaseRequest) {
     const { routeId, userId, passenger, passengerCpf, seatNumber } = request;
 
-    // Verifica se a rota existe
-    const route = await this.routeRepository.findById(routeId);
+    let route;
+    
+    // Verifica se é uma rota virtual (começa com "virtual-")
+    if (routeId.startsWith('virtual-')) {
+      try {
+        // Materializa a rota virtual
+        route = await this.dynamicRouteService.materializeRoute(routeId);
+      } catch (error) {
+        throw new Error(`Erro ao materializar rota virtual: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+      }
+    } else {
+      // Busca rota física normal
+      route = await this.routeRepository.findById(routeId);
+    }
     
     if (!route) {
       throw new Error('Rota não encontrada.');
     }
     
     // Verifica se há assentos disponíveis  
-    if (route.totalSeats <= 0) {
+    const availableSeats = await this.routeRepository.getAvailableSeats(route.id);
+    if (availableSeats <= 0) {
       throw new Error('Não há assentos disponíveis para esta rota.');
     }
     
@@ -40,7 +55,7 @@ export class ReserveTicketUseCase {
     
     // Cria a reserva
     const ticket = await this.ticketRepository.create({
-      routeId,
+      routeId: route.id,
       userId,
       status: TicketStatus.RESERVED,
       ticketCode,
@@ -50,9 +65,7 @@ export class ReserveTicketUseCase {
     });
     
     // Atualiza o número de assentos disponíveis
-    await this.routeRepository.update(routeId, {
-      totalSeats: route.totalSeats - 1
-    });
+    // Não atualizamos mais o totalSeats, pois agora usamos o método getAvailableSeats
     
     return { ticket };
   }

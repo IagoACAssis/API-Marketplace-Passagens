@@ -14,6 +14,7 @@ export interface Ticket {
   passenger: string;
   passengerCpf: string;
   seatNumber?: string | null;
+  paymentId?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
